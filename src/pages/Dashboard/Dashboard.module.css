@@ -28,7 +28,7 @@
   font-size: 1.5rem;
   font-weight: 500;
 }
-.durationButton > select {
+.durationButton > h1 {
   border: none;
   background: var(--orange-gradient);
   padding: 10px;
