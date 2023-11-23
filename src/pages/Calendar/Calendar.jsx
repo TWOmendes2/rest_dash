@@ -57,7 +57,7 @@ const Calendar = () => {
                     }}
 
                     allDaySlot={false}
-                    initialView="timeGridWeek"
+                    initialView="timeGridMonth"
                     slotDuration={"01:00:00"}
                     editable={true}
                     selectable={true}
