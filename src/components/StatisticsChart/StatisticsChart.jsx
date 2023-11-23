@@ -50,11 +50,11 @@ const StatisticsChart = () => {
                     color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
                         {
                             offset: 0,
-                            color: "rgb(255, 191, 0)",
+                            color: "rgba(12, 161, 19, 0.99)",
                         },
                         {
                             offset: 1,
-                            color: "#F450D3"
+                            color: "rgba(72, 255, 0, 0.99)"
                         }
                     ]),
                     width: 4
@@ -64,11 +64,11 @@ const StatisticsChart = () => {
                     color: new echarts.graphic.LinearGradient(0, 0, 0, 0.8, [
                         {
                             offset: 0,
-                            color: "#FE4C00"
+                            color: "#055f02"
                         },
                         {
                             offset: 1,
-                            color: "rgba(255,144,70,0.1)"
+                            color: "#055f02"
                         }
                     ])
                 },
