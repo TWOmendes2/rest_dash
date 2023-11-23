@@ -14,9 +14,7 @@ const Dashboard = () => {
 
           <div className={css.durationButton}>
             <select>
-              <option value="">1 Semana</option>
-              <option value="">1 Mês</option>
-              <option value="">1 Ano</option>
+              <h1>Esta semana</h1>
             </select>
           </div>
         </div>
