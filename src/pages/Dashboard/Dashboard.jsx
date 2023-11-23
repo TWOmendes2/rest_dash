@@ -13,9 +13,7 @@ const Dashboard = () => {
           <span>Dashboard</span>
 
           <div className={css.durationButton}>
-            <select>
               <h1>Esta semana</h1>
-            </select>
           </div>
         </div>
           <div className={css.cards}>
