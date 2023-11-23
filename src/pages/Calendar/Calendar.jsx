@@ -69,6 +69,7 @@ const Calendar = () => {
                     eventsSet={handleEvents}
                     select={handleDateSelect}
                     eventClick={handleEventClick}
+                    locales={['pt-br']}
                 />
             </div>
         </div>
