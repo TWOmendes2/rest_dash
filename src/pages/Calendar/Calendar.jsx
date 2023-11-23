@@ -50,11 +50,17 @@ const Calendar = () => {
                     plugins={[dayGridPlugin, interactionPlugin, timeGridPlugin]}
                     headerToolbar={{
 
-                        left: 'prev,next today',
+                        left: 'prev,next',
                         center: "title",
                         right: "dayGridMonth,timeGridWeek,timeGridDay"
 
                     }}
+                    buttonText={{
+                        month: 'Mês',
+                        week: 'Semana',
+                        day: 'Dia',
+                      }}
+                    
 
                     allDaySlot={false}
                     initialView="dayGridMonth"
