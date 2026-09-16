@@ -1,37 +1,39 @@
-# Sistema de Gerenciamento de Comandas
+# Rest Dash
 
-Este é um projeto desenvolvido como parte de um curso universitário para integrar um sistema de comandas. O objetivo é fornecer uma plataforma centralizada para gerenciar pedidos, eventos e dados relacionados ao negócio. O projeto inclui várias páginas e funcionalidades para facilitar o gerenciamento eficiente de tarefas e informações.
+Dashboard React de estudo para uma operaÃ§Ã£o de restaurante: indicadores, calendÃ¡rio,
+tabela e quadro de tarefas. Usa dados de demonstraÃ§Ã£o e estado em memÃ³ria; nÃ£o hÃ¡
+API, autenticaÃ§Ã£o, persistÃªncia nem integraÃ§Ã£o de comandas implementada.
 
-## Funcionalidades Principais
+## Desenvolvimento
 
-### 1. Painel de Controle
-- Visão geral dos dados essenciais do negócio.
-- Exibição de estatísticas, resumos e indicadores-chave de desempenho.
+Node.js 22.12+ e npm. O lockfile npm Ã© a referÃªncia Ãºnica de dependÃªncias.
 
-### 2. Calendário Interativo
-- Agendamento e acompanhamento de eventos importantes.
-- Suporte para visualização diária, semanal e mensal.
+```sh
+npm ci
+npm run dev
+npm run build
+npm run preview
+```
 
-### 3. Tabela de Dados
-- Exibição tabular de informações detalhadas, como clientes, pedidos e pagamentos.
-- Funcionalidades de ordenação, filtragem e pesquisa para facilitar a navegação.
+## OrganizaÃ§Ã£o
 
-### 4. Quadro Kanban
-- Organização visual de tarefas com suporte para arrastar e soltar.
-- Personalização de colunas e cartões para se adequarem às necessidades específicas.
+`pages` compÃµe telas; `components` contÃ©m apresentaÃ§Ã£o reutilizÃ¡vel; `store` mantÃ©m
+estado Zustand; `data` fornece fixtures. React Router liga as telas. FullCalendar,
+MUI e ECharts sustentam calendÃ¡rio, tabela e visualizaÃ§Ãµes.
 
-## Tecnologias Utilizadas
+## ModernizaÃ§Ã£o 0.1.0
 
-- React: Biblioteca JavaScript para construção de interfaces de usuário.
-- React Router: Roteamento para aplicativos React de página única.
-- Material-UI: Biblioteca de componentes React com design e tema Material.
-- FullCalendar: Biblioteca de calendário interativo para JavaScript.
-- Material-React-Table: Componente de tabela de dados para React com design Material.
-- @asseinfo/react-kanban: Componente de quadro kanban para React.
+Vite 8 e plugin React 6; remoÃ§Ã£o de artefato temporÃ¡rio; lockfile reproduzÃ­vel; idioma
+pt-BR; fallback de rotas; textarea correto; validaÃ§Ã£o de campos vazios; hook do cabeÃ§alho
+Kanban isolado em componente; identificadores de cartÃ£o com UUID. Busca visual
+desativada explicitamente atÃ© existir implementaÃ§Ã£o.
 
-## Instalação e Uso
+## VerificaÃ§Ã£o e limites
 
-1. Clone o repositório: `git clone https://github.com/seu-usuario/seu-repositorio.git`
-2. Navegue até a pasta do projeto: `cd seu-repositorio`
-3. Instale as dependências: `npm install`
-4. Inicie o aplicativo: `npm start`
+CI compila o bundle. Antes do merge, verificar navegaÃ§Ã£o, criaÃ§Ã£o/remoÃ§Ã£o e arraste
+de cartÃµes, calendÃ¡rio e tabela em navegador. AtualizaÃ§Ãµes de grandes bibliotecas
+visuais devem ser feitas separadamente, com testes de interaÃ§Ã£o. O pacote Kanban
+legado tem dependÃªncias antigas e Ã© candidato a substituiÃ§Ã£o futura.
+
+NÃ£o inserir dados reais na demonstraÃ§Ã£o. Para evoluir a produto: API autenticada,
+persistÃªncia, autorizaÃ§Ã£o, testes de fluxo e revisÃ£o de acessibilidade e tamanho do bundle.

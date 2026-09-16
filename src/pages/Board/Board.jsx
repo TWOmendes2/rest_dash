@@ -1,128 +1,64 @@
-import Board, { moveCard, moveColumn, removeCard, addCard } from '@asseinfo/react-kanban'
-import "@asseinfo/react-kanban/dist/styles.css";
-import useBoard from '../../store/Board';
-import "./Board.css"
-import { RxCross2 } from 'react-icons/rx'
-import { IoMdAdd } from 'react-icons/io'
-import AddCardModal from '../../components/AddCardModal/AddCardModal';
-import { useState } from 'react';
-
-const BoardPage = () => {
-
-    const { board, setBoard } = useBoard()
-
-    const handleColumnMove = (_card, source, destination) => {
-        const updatedBoard = moveColumn(board, source, destination)
-        setBoard(updatedBoard)
-    }
-
-    const handleCardMove = (_card, source, destination) => {
-        const updatedBoard = moveCard(board, source, destination)
-        setBoard(updatedBoard)
-
-    }
-
-    const getColumn = (card) => {
-        const column = board.columns.filter((column) => column.cards.includes(card))
-        return column[0]
-    }
-
-    const getGradient = (card) => {
-        const column = getColumn(card)
-        const title = column.title
-        if (title === "Agnaldo") {
-            return {
-                background:
-                    "linear-gradient(65.35deg, rgba(65, 65, 65, 0.67) -1.72%, rgba(48, 189, 220) 163.54%)",
-            };
-        } else if (title === "Felipe") {
-            return {
-                background:
-                    "linear-gradient(65.35deg, rgba(65, 65, 65, 0.67) -1.72%, rgba(220, 48, 48) 163.54%)",
-            };
-        } else if (title === "Gustavo") {
-            return {
-                background:
-                    "linear-gradient(65.35deg, rgba(65, 65, 65, 0.67) -1.72%, rgba(48, 220, 86) 163.54%)",
-            };
-        } else if (title === "Gabriel") {
-            return {
-                background:
-                    "linear-gradient(65.35deg, rgba(65, 65,65, 0.67) -1.72%,rgba(134, 48, 220) 163.54%)",
-            };
-        }
-    }
-
-
-    return (
-        <div className="board-container">
-
-            <span>Divisão de tarefas</span>
-
-            <Board
-                allowAddColumn
-                allowRenameColumn
-                allowRemoveCard
-                onCardDragEnd={handleCardMove}
-                onColumnDragEnd={handleColumnMove}
-                renderCard={(props) => (
-                    <div className='kanban-card' style={getGradient(props)}>
-                        <div>
-                            <span>
-                                {props.title}
-                            </span>
-                            <button className='remove-button' type='button'
-                                onClick={() => {
-                                    const updatedBoard = removeCard(board,
-                                        getColumn(props),
-                                        props
-                                    )
-                                    setBoard(updatedBoard)
-                                }}
-                            >
-                                <RxCross2 color="white" size={15} />
-                            </button>
-                        </div>
-                        <span>{props.description}</span>
-                    </div>
-                )}
-                renderColumnHeader={(props) => {
-
-                    const [modalOpened, setModalOpened] = useState(false)
-
-                    const handleCardAdd = (title, detail)=> {
-                        const card = {
-                            id : new Date().getTime(),
-                            title, 
-                            description: detail
-                        };
-
-                        const updatedBoard = addCard(board, props, card)
-                        setBoard(updatedBoard)
-                        setModalOpened(false)
-
-                    }
-
-                    return (
-                        <div className='column-header'>
-                            <span>{props.title}</span>
-
-                            <IoMdAdd
-                                color="white"
-                                size={25} title="Add card"
-                                onClick={()=>setModalOpened(true)}
-                            />
-                            <AddCardModal visible={modalOpened} handleCardAdd={handleCardAdd}
-                                onClose={() => setModalOpened(false)} />
-                        </div>
-                    )
-                }}
-
-            >
-                {board}
-            </Board>
-        </div>
-    )
-}
-
-export default BoardPage
+import { useState } from 'react';
+import useBoard from '../../store/Board';
+import { moveTask } from '../../store/board-domain';
+import './Board.css';
+
+export default function BoardPage() {
+  const { board, setBoard } = useBoard();
+  const [message, setMessage] = useState('');
+  const move = (id, columnId) => {
+    setBoard(moveTask(board, id, columnId));
+    setMessage('Cartão movido.');
+  };
+  const addColumn = () => {
+    const title = window.prompt('Nome da coluna')?.trim();
+    if (title) setBoard({ ...board, columns: [...board.columns, { id: crypto.randomUUID(), title, cards: [] }] });
+  };
+  return <section className="board-container">
+    <h1>Divisão de tarefas</h1>
+    <button onClick={addColumn}>Adicionar coluna</button>
+    <p role="status">{message}</p>
+    <div className="task-columns">
+      {board.columns.map(column => <section key={column.id} className="task-column"
+        onDragOver={event => event.preventDefault()}
+        onDrop={event => { event.preventDefault(); move(event.dataTransfer.getData('text/plain'), column.id); }}>
+        <h2>{column.title}</h2>
+        <button onClick={() => {
+          const title = window.prompt('Novo nome', column.title)?.trim();
+          if (title) setBoard({ ...board, columns: board.columns.map(item => item.id === column.id ? { ...item, title } : item) });
+        }}>Renomear coluna</button>
+        <TaskForm onAdd={(title, description) => {
+          setBoard({ ...board, columns: board.columns.map(item => item.id === column.id ? {
+            ...item, cards: [...item.cards, { id: crypto.randomUUID(), title, description }],
+          } : item) });
+        }} />
+        {column.cards.map(card => <article className="kanban-card" key={card.id} draggable
+          onDragStart={event => event.dataTransfer.setData('text/plain', String(card.id))}>
+          <h3>{card.title}</h3><p>{card.description}</p>
+          <label>Mover cartão
+            <select aria-label={`Mover ${card.title}`} value={column.id} onChange={event => move(card.id, event.target.value)}>
+              {board.columns.map(target => <option key={target.id} value={target.id}>{target.title}</option>)}
+            </select>
+          </label>
+          <button onClick={() => setBoard({ ...board, columns: board.columns.map(item => ({
+            ...item, cards: item.cards.filter(task => task.id !== card.id),
+          })) })}>Remover {card.title}</button>
+        </article>)}
+      </section>)}
+    </div>
+  </section>;
+}
+
+function TaskForm({ onAdd }) {
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  return <form onSubmit={event => {
+    event.preventDefault();
+    if (!title.trim() || !description.trim()) return;
+    onAdd(title.trim(), description.trim()); setTitle(''); setDescription('');
+  }}>
+    <label>Título<input value={title} maxLength={120} onChange={event => setTitle(event.target.value)} required /></label>
+    <label>Descrição<textarea value={description} maxLength={1000} onChange={event => setDescription(event.target.value)} required /></label>
+    <button disabled={!title.trim() || !description.trim()}>Adicionar cartão</button>
+  </form>;
+}
